@@ -40,7 +40,12 @@ namespace APIFinancas.Especificacoes
         [Then(@"o resultado será (.*)")]
         public void ValidarResultado(double valorFinalEmprestimo)
         {
-            Assert.Equal(valorFinalEmprestimo, _valorCalculado);
+            // Comparação com precisão de 2 casas decimais (valores em R$).
+            // A assinatura Assert.Equal(double, double) sem precision compara
+            // bit-a-bit, o que falha por arredondamento IEEE 754 quando o
+            // cálculo envolve Math.Pow. A sobrecarga com `precision` arredonda
+            // ambos os lados antes de comparar.
+            Assert.Equal(valorFinalEmprestimo, _valorCalculado, 2);
         }
     }
 }
